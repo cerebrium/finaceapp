@@ -1,17 +1,62 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import { Link } from 'react-router-dom'
+import './App.css'
+import axios from 'axios'
+import { ReactMic } from 'react-mic';
 
 const WelcomePage = (props) => {
+    const [ isBlocked, setIsBlocked ] = useState(false)
+    const [ record, setRecord] = useState(false) 
 
       // logout
     const logout = () => {
         localStorage.removeItem('mernToken')
         props.user.user = null
         props.user.token = ''
-        console.log(props)
         window.location.reload()
     }
 
+    // start recording
+    const startRecording = () => {
+        setRecord(true)
+    }
+
+    // Stop Recording
+    const stopRecording = () => {
+        setRecord(false)
+    }
+
+    // Real Time blob recording in process
+    const onData = (recordedBlob) => {
+        console.log('chunk of real-time data is: ', recordedBlob);
+    }
+ 
+    // If blob is done recording here it is
+    const onStop = (recordedBlob) => {
+        console.log(recordedBlob.blobURL)
+        axios.post('/api/speech', {
+            blobURL: recordedBlob.blobURL
+        }).then ( response => {
+            console.log(response.data)
+        })
+    }
+
+    // Check if the user is allowing use of the comuter mic
+    useEffect(() => {
+        navigator.mediaDevices.getUserMedia({audio: true})
+        .then( (info) => {
+            if (info.active) {
+                setIsBlocked(true)
+            } 
+        })
+        .catch(function(err) {
+            console.log(err)
+        });
+    }, [])
+
+    // record sound byte
+
+    
     return (
         <>
             <nav className='navbar'>
@@ -21,8 +66,17 @@ const WelcomePage = (props) => {
                 <Link to='/link2' className='links'>link3</Link>{' | '}
                 <Link to='/link4' className='links'>link4</Link>
             </nav>
-            <div className='welcomePage'>
+            <div >
                 <h1>Welcome Home</h1>
+                <div className='welcomePage'>
+                    <ReactMic record={record} className="sound-wave" onStop={onStop} onData={onData}/>
+                    <button onClick={startRecording}>
+                        <h3>Record</h3>
+                    </button>
+                    <button onClick={stopRecording}>
+                        <h3>Stop</h3>
+                    </button>
+                </div>
             </div>
         </>
     )

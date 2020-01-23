@@ -74,7 +74,16 @@ h1 {
 
 .welcomePage {
   height: 97vh;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.startingButtons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /********************************************* NAVBAR ****************************************/
