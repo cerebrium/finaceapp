@@ -3,10 +3,21 @@ import { Link } from 'react-router-dom'
 import './App.css'
 import axios from 'axios'
 import { ReactMic } from 'react-mic';
+import SpeechRecognition from "react-speech-recognition"
+import PropTypes from "prop-types";
 
 const WelcomePage = (props) => {
     const [ isBlocked, setIsBlocked ] = useState(false)
     const [ record, setRecord] = useState(false) 
+    const recognition = new SpeechRecognition()
+
+    // Imported variable from the node module
+    const propTypes = {
+        // Props injected by SpeechRecognition
+        transcript: PropTypes.string,
+        resetTranscript: PropTypes.func,
+        browserSupportsSpeechRecognition: PropTypes.bool
+      };
 
       // logout
     const logout = () => {
@@ -19,11 +30,16 @@ const WelcomePage = (props) => {
     // start recording
     const startRecording = () => {
         setRecord(true)
+        SpeechRecognition.start()
+        console.log(SpeechRecognition)
+        console.log(recognition)
+        // recognition.startListening()
     }
 
     // Stop Recording
     const stopRecording = () => {
         setRecord(false)
+        // recognition.stopListening()
     }
 
     // Real Time blob recording in process
@@ -33,7 +49,7 @@ const WelcomePage = (props) => {
  
     // If blob is done recording here it is
     const onStop = (recordedBlob) => {
-        console.log(recordedBlob.blobURL)
+        console.log(recordedBlob)
         axios.post('/api/speech', {
             blobURL: recordedBlob.blobURL
         }).then ( response => {
