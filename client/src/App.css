@@ -75,9 +75,43 @@ h1 {
 .welcomePage {
   height: 97vh;
   display: flex;
+  padding-top: 5%;
+  justify-content: center;
+  background-image: url('./john-moeses-bauan-white-boat.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.nonColumn {
+  margin-top: 3%;
+display: flex;
+}
+
+.positionThis {
+  border: 2px solid rgba(192, 190, 190, 0.8);
+  border-radius: 5%;
+  background-color: rgb(235, 231, 231);
+  height: 50vh;
+  width: 40vw;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
+}
+
+.centerThis {
+  text-align: center;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.positionThisTwo {
+  border: 2px solid rgba(192, 190, 190, 0.8);
+  border-radius: 5%;
+  background-color: rgb(235, 231, 231);
+  height: 50vh;
+  width: 40vw;
+
 }
 
 .startingButtons {
@@ -88,6 +122,11 @@ h1 {
 
 h1 {
   text-align: center;
+}
+
+.reactMic {
+  width: 20vw;
+  margin-bottom: 5%;
 }
 
 /********************************************* NAVBAR ****************************************/
