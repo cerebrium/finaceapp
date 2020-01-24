@@ -6,18 +6,18 @@ import { ReactMic } from 'react-mic';
 import SpeechRecognition from "react-speech-recognition"
 import PropTypes from "prop-types";
 
-const WelcomePage = (props) => {
+const propTypes = {
+    // Props injected by SpeechRecognition
+    transcript: PropTypes.string,
+    resetTranscript: PropTypes.func,
+    browserSupportsSpeechRecognition: PropTypes.bool
+};
+
+const WelcomePage = (props, transcript, resetTranscript, startListening, browserSupportsSpeechRecognition) => {
     const [ isBlocked, setIsBlocked ] = useState(false)
     const [ record, setRecord] = useState(false) 
     const recognition = new SpeechRecognition()
-
-    // Imported variable from the node module
-    const propTypes = {
-        // Props injected by SpeechRecognition
-        transcript: PropTypes.string,
-        resetTranscript: PropTypes.func,
-        browserSupportsSpeechRecognition: PropTypes.bool
-      };
+    console.log(recognition)
 
       // logout
     const logout = () => {
@@ -30,16 +30,15 @@ const WelcomePage = (props) => {
     // start recording
     const startRecording = () => {
         setRecord(true)
-        SpeechRecognition.start()
-        console.log(SpeechRecognition)
-        console.log(recognition)
-        // recognition.startListening()
+        props.resetTranscript()
+        props.startListening()
+        console.log(props)
     }
-
+    
     // Stop Recording
     const stopRecording = () => {
         setRecord(false)
-        // recognition.stopListening()
+        props.stopListening()
     }
 
     // Real Time blob recording in process
@@ -69,9 +68,6 @@ const WelcomePage = (props) => {
             console.log(err)
         });
     }, [])
-
-    // record sound byte
-
     
     return (
         <>
@@ -79,13 +75,12 @@ const WelcomePage = (props) => {
                 <Link to='/logout' onClick={logout} className='links'>Logout</Link>{' | '}
                 <Link to='/link1' className='links'>link1</Link>{' | '}
                 <Link to='/link2' className='links'>link2</Link>{' | '}
-                <Link to='/link2' className='links'>link3</Link>{' | '}
-                <Link to='/link4' className='links'>link4</Link>
             </nav>
             <div >
                 <h1>Welcome Home</h1>
                 <div className='welcomePage'>
                     <ReactMic record={record} className="sound-wave" onStop={onStop} onData={onData}/>
+                    <span>{props.transcript}</span>
                     <button onClick={startRecording}>
                         <h3>Record</h3>
                     </button>
@@ -98,4 +93,11 @@ const WelcomePage = (props) => {
     )
 }
 
-export default WelcomePage
+// options for the speech recognition api
+const options = {
+    autoStart: false
+}
+
+WelcomePage.prototype = propTypes
+
+export default SpeechRecognition(options)(WelcomePage)
